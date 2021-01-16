@@ -10,8 +10,7 @@ import Box from '@material-ui/core/Box'
 import Alert from '@material-ui/lab/Alert'
 
 import Uploader from './components/Uploader'
-import { signInAnonymouslySuccess } from './redux/auth'
-import * as auth from './lib/authentication'
+import { signInAnonymously } from './redux/auth'
 
 import styles from './App.styles'
 
@@ -25,7 +24,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    auth.signInAnonymously(this.handleLogin, this.handleLoginError)
+    this.props.signInAnonymously()
+  }
+
+  componentDidUpdate() {
+    if (this.props.auth.error) {
+      this.showAlert('error', 'Cannot fire up session!')
+    }
   }
 
   showAlert = (severity, message) => {
@@ -33,16 +38,6 @@ class App extends Component {
     setTimeout(() => {
       this.setState({ alert: { show: false, severity: '', message: '' } })
     }, 1500)
-  }
-
-  handleLogin = (user) => {
-    if (user) {
-      this.props.signInAnonymouslySuccess({ user })
-    }
-  }
-
-  handleLoginError = () => {
-    this.showAlert('error', 'Cannot fire up session!')
   }
 
   render() {
@@ -87,6 +82,6 @@ class App extends Component {
   }
 }
 
-export default connect(null, { signInAnonymouslySuccess })(
-  withStyles(styles)(App)
-)
+export default connect((state) => ({ auth: state.auth }), {
+  signInAnonymously
+})(withStyles(styles)(App))

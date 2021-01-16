@@ -1,8 +1,17 @@
 import { firebaseAuth } from './provider/firebase'
 
-const signInAnonymously = (handler, errorHandler) => {
-  firebaseAuth.signInAnonymously().catch(errorHandler)
-  firebaseAuth.onAuthStateChanged(handler)
+const signInAnonymously = async () => {
+  await firebaseAuth.signInAnonymously()
+
+  return new Promise((resolve, reject) => {
+    firebaseAuth.onAuthStateChanged((user) => {
+      if (user) {
+        resolve(user)
+      } else {
+        reject('Failed to create user session!')
+      }
+    })
+  })
 }
 
 export { signInAnonymously }
