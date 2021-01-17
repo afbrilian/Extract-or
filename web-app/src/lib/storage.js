@@ -18,12 +18,10 @@ const uploadImageAsPromise = (user, storageRef, file) => {
       'state_changed',
       function progress() {},
       function error(err) {
-        console.log(err)
         reject(err)
       },
       function complete() {
-        var downloadURL = task.snapshot.downloadURL
-        resolve(downloadURL)
+        resolve()
       }
     )
   })

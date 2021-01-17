@@ -44,6 +44,7 @@ export default memo(({ showAlert }) => {
       return
     }
     dispatch(upload({ files }))
+    setFiles([])
   }
 
   return (
