@@ -16,8 +16,8 @@ export function* signInAnonymouslySaga() {
     yield put(signInAnonymouslyFailed({ error: error.message }))
   }
 }
-export function* watchSignInAnonymouslySaga() {
+export function* watchSignInAnonymouslyAction() {
   yield takeLatest(signInAnonymously.toString(), signInAnonymouslySaga)
 }
 
-export default [watchSignInAnonymouslySaga]
+export default [watchSignInAnonymouslyAction]

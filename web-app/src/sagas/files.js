@@ -12,8 +12,8 @@ export function* uploadFilesSaga({ payload }) {
     yield put(uploadFailed({ error: error.message }))
   }
 }
-export function* watchUpload() {
+export function* watchUploadAction() {
   yield takeLatest(upload.toString(), uploadFilesSaga)
 }
 
-export default [watchUpload]
+export default [watchUploadAction]

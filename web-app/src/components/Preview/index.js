@@ -1,36 +1,73 @@
-import React, { memo } from 'react'
-import { useSelector } from 'react-redux'
+import React, { memo, useEffect, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import Accordion from '@material-ui/core/Accordion'
 import AccordionSummary from '@material-ui/core/AccordionSummary'
 import AccordionDetails from '@material-ui/core/AccordionDetails'
 import Typography from '@material-ui/core/Typography'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import Box from '@material-ui/core/Box'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 
+import { append } from '../../redux/documents'
+import { parserFinished } from '../../redux/files'
+import * as db from '../../lib/database'
 import styles from './styles'
 
 const useStyles = makeStyles(styles)
 
 export default memo(() => {
   const classes = useStyles()
+  const dispatch = useDispatch()
 
-  const { isUploadInProgress } = useSelector((state) => ({
-    isUploadInProgress: state.files.inProgress
+  const { uid, documents, isParseInProgress } = useSelector((state) => ({
+    uid: state.auth?.user?.uid,
+    documents: state.documents?.files,
+    isParseInProgress: state.files?.parseInProgress
   }))
 
+  const unSubscribedataListener = useRef(null)
+  useEffect(() => {
+    if (uid) {
+      unSubscribedataListener.current = db.subscribeToDataChanges(
+        uid,
+        dataChangesHandler
+      )
+    }
+    return () => {
+      if (unSubscribedataListener && unSubscribedataListener.current) {
+        unSubscribedataListener.current()
+      }
+    }
+  }, [uid])
+
+  const dataChangesHandler = (snapshot) => {
+    for (let i = snapshot.docs.length; i--; ) {
+      const doc = snapshot.docs[i]
+      dispatch(append({ fileName: doc.id, ...doc.data() }))
+      dispatch(parserFinished())
+    }
+  }
   return (
     <>
-      <Accordion>
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography className={classes.heading}>Accordion 1</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse
-            malesuada lacus ex, sit amet blandit leo lobortis eget.
-          </Typography>
-        </AccordionDetails>
-      </Accordion>
+      {documents.map((document, i) => (
+        <Accordion key={i}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography className={classes.heading}>
+              {document.fileName}
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails className={classes.content}>
+            <Typography>{document.pages}</Typography>
+          </AccordionDetails>
+        </Accordion>
+      ))}
+      {isParseInProgress && (
+        <Box>
+          <LinearProgress className={classes.parserLoader} />
+          <Typography align="center">Processing your PDF....</Typography>
+        </Box>
+      )}
     </>
   )
 })
