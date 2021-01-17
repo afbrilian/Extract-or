@@ -38,7 +38,7 @@ export default memo(() => {
       if (unSubscribedataListener && unSubscribedataListener.current) {
         unSubscribedataListener.current()
       }
-    }
+    } // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uid])
 
   const dataChangesHandler = (snapshot) => {

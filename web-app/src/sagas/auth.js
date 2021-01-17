@@ -20,4 +20,6 @@ export function* watchSignInAnonymouslyAction() {
   yield takeLatest(signInAnonymously.toString(), signInAnonymouslySaga)
 }
 
-export default [watchSignInAnonymouslyAction]
+const sagas = [watchSignInAnonymouslyAction]
+
+export default sagas

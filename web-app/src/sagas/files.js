@@ -16,4 +16,6 @@ export function* watchUploadAction() {
   yield takeLatest(upload.toString(), uploadFilesSaga)
 }
 
-export default [watchUploadAction]
+const sagas = [watchUploadAction]
+
+export default sagas
