@@ -2,32 +2,16 @@ module.exports = {
   root: true,
   env: {
     es6: true,
-    node: true,
+    node: true
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:import/errors',
-    'plugin:import/warnings',
-    'plugin:import/typescript',
-    'google',
-    'prettier',
-    'prettier/@typescript-eslint',
-  ],
-  parser: '@typescript-eslint/parser',
   parserOptions: {
-    project: ['tsconfig.json', 'tsconfig.dev.json'],
-    sourceType: 'module',
+    ecmaVersion: '2017'
   },
-  ignorePatterns: [
-    '/lib/**/*', // Ignore built files.
-  ],
-  plugins: [
-    '@typescript-eslint',
-    'import',
-    'prettier'
-  ],
+  plugins: ['prettier'],
+  extends: ['eslint:recommended', 'google', 'prettier'],
   rules: {
     quotes: ['error', 'single'],
-    semi: 0,
-  },
-};
+    semi: ['error', 'never'],
+    'prettier/prettier': ['error']
+  }
+}

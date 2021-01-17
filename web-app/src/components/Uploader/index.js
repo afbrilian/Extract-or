@@ -43,7 +43,7 @@ export default memo(({ showAlert }) => {
       showAlert('warning', 'Please upload some files first!')
       return
     }
-    dispatch(upload({ files }))
+    dispatch(upload({ files: files.map((fileItem) => fileItem.file) }))
     setFiles([])
   }
 

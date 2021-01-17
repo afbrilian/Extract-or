@@ -10,6 +10,7 @@ import Box from '@material-ui/core/Box'
 import Alert from '@material-ui/lab/Alert'
 
 import Uploader from './components/Uploader'
+import Preview from './components/Preview'
 import { signInAnonymously } from './redux/auth'
 
 import styles from './App.styles'
@@ -64,7 +65,7 @@ class App extends Component {
                 <Uploader showAlert={this.showAlert} />
               </Grid>
               <Grid item xs={12}>
-                preview
+                <Preview />
               </Grid>
             </Grid>
           </Box>
